@@ -15,12 +15,19 @@ import java.io.File
   * otherwise pos/__defaultFlags.flags are used if the file exists).
   */
 object DPConfig {
-  val testRoot = (Path(".") / Path("tests") / Path("partest-generated")).toString
-  val genLog = Path(testRoot) / Path("gen.log")
+
+  private val testRootPath =
+    (Path(".") / Path("tests") / Path("partest-generated"))
+
+  def testRoot = testRootPath.toString
+
+  val genLog = testRootPath / Path("gen.log")
 
   lazy val testDirs = {
     val root = new File(testRoot)
-    val dirs = if (!root.exists) Array.empty[String] else root.listFiles.filter(_.isDirectory).map(_.getName)
+    val dirs =
+      if (!root.exists) Array.empty[String]
+      else root.listFiles.filter(_.isDirectory).map(_.getName)
     if (dirs.isEmpty)
       throw new Exception("Partest did not detect any generated sources")
     dirs
